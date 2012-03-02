@@ -1,0 +1,25 @@
+; This stunnel config is managed by Puppet.
+
+cert = <%= certificate %>
+key = <%= private_key %>
+CAfile = <%= ca_file %>
+CRLfile = <%= crl_file %>
+sslVersion = <%= ssl_version_real %>
+verify = 2
+
+chroot = <%= chroot %>
+setuid = <%= user %>
+setgid = <%= group %>
+pid = <%= pid_file %>
+
+socket = l:TCP_NODELAY=1
+socket = r:TCP_NODELAY=1
+
+debug = <%= debug_level %>
+output = <%= log_dest %>
+
+client = <%= client_on %>
+
+[<%= name -%>]
+accept = <%= accept %>
+connect = <%= connect %>
