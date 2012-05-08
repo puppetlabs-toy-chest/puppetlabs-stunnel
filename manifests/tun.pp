@@ -75,12 +75,16 @@
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
-#     chroot  => '/var/lib/stunnel4/rsyncd',
-#     user    => 'pe-puppet',
-#     group   => 'pe-puppet',
-#     client  => false,
-#     accept  => '1873',
-#     connect => '873',
+#     certificate => "/etc/puppet/ssl/certs/${::clientcert}.pem",
+#     private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
+#     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
+#     crl_file    => '/etc/puppet/ssl/crl.pem',
+#     chroot      => '/var/lib/stunnel4/rsyncd',
+#     user        => 'pe-puppet',
+#     group       => 'pe-puppet',
+#     client      => false,
+#     accept      => '1873',
+#     connect     => '873',
 #   }
 #
 # === Authors
@@ -92,10 +96,10 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 define stunnel::tun(
-    $certificate = "/etc/puppetlabs/puppet/ssl/certs/${::clientcert}.pem",
-    $private_key = "/etc/puppetlabs/puppet/ssl/private_keys/${::clientcert}.pem",
-    $ca_file     = '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
-    $crl_file    = '/etc/puppetlabs/puppet/ssl/crl.pem',
+    $certificate,
+    $private_key,
+    $ca_file,
+    $crl_file,
     $ssl_version = 'TLSv1',
     $chroot,
     $user,
@@ -127,7 +131,7 @@ define stunnel::tun(
     ensure  => file,
     content => template("${module_name}/stunnel.conf.erb"),
     mode    => '0644',
-    owner    => '0',
+    owner   => '0',
     group   => '0',
     require => File[$conf_dir],
   }

@@ -26,6 +26,6 @@ node default {
     group       => 'puppet',
     client      => true,
     accept      => '1874',
-    connect     => 'client.example.com:1873',
+    connect     => 'server.example.com:1873',
   }
 }
