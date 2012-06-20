@@ -100,7 +100,7 @@ define stunnel::tun(
     $private_key,
     $ca_file,
     $crl_file,
-    $ssl_version = 'TLSv1',
+    $ssl_version = 'all',
     $chroot,
     $user,
     $group,
@@ -114,6 +114,7 @@ define stunnel::tun(
 ) {
 
   $ssl_version_real = $ssl_version ? {
+    'all'   => 'all',
     'tlsv1' => 'TLSv1',
     'sslv2' => 'SSLv2',
     'sslv3' => 'SSLv3',
