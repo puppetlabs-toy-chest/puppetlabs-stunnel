@@ -1,3 +1,0 @@
-Provides a set of defined resource types for managing stunnel on Debain systems.
-Should be easily adaptable to EL platforms.  Example usage can be found in the
-test directory or module documentation.
