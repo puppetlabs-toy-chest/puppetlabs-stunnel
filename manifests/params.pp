@@ -1,4 +1,4 @@
-# == Class: stunnel::data
+# == Class: stunnel::params
 #
 # This module sets up SSL encrypted and authenticated tunnels using the
 # common application stunnel.
@@ -24,8 +24,22 @@
 #
 # Copyright 2012 Puppet Labs, LLC
 #
-class stunnel::data {
-  $conf_dir = '/etc/stunnel'
-  $package  = 'stunnel4'
-  $service  = 'stunnel4'
+class stunnel::params {
+  case $::osfamily {
+    'Debian': {
+      $conf_dir   = '/etc/stunnel'
+      $package    = 'stunnel4'
+      $service    = 'stunnel4'
+      $needs_exec = true
+    }
+    'RedHat': {
+      $conf_dir   = '/etc/stunnel'
+      $package    = 'stunnel'
+      $service    = false
+      $needs_exec = true
+    }
+    default: {
+      fail("${::operatingsystem} platform not supported.")
+    }
+  }
 }
