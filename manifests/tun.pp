@@ -72,6 +72,9 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*verify*]
+#   verify level according to man(8) stunnel
+# 
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
@@ -110,7 +113,8 @@ define stunnel::tun(
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::data::conf_dir
+    $conf_dir    = $stunnel::data::conf_dir,
+    $verify      = '2',
 ) {
 
   $ssl_version_real = $ssl_version ? {
