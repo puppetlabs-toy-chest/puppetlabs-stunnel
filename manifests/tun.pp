@@ -90,6 +90,7 @@
 # === Authors
 #
 # Cody Herriges <cody@puppetlabs.com>
+# Sam Kottler <shk@linux.com>
 #
 # === Copyright
 #
@@ -110,7 +111,7 @@ define stunnel::tun(
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::data::conf_dir
+    $conf_dir    = $stunnel::params::conf_dir
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -125,7 +126,7 @@ define stunnel::tun(
     false => 'no',
   }
 
-  validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered options is TLSv1.')
+  validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered option is TLSv1. SSLv2 should be avoided.')
 
   file { "${conf_dir}/${name}.conf":
     ensure  => file,
@@ -142,5 +143,4 @@ define stunnel::tun(
     group  => $group,
     mode   => '0600',
   }
-
 }
