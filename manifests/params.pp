@@ -26,7 +26,7 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 class stunnel::params {
-  case $osfamily {
+  case $::osfamily {
     Debian: {
       $conf_dir = '/etc/stunnel'
       $package  = 'stunnel4'

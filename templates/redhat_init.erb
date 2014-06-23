@@ -1,0 +1,145 @@
+#!/bin/bash
+#
+# Script to run stunnel_server in daemon mode at boot time.
+#
+# This script is realeased under the terms of the GPL.
+# You can source a copy at:
+# http://www.fsf.org/copyleft/copyleft.html
+#
+# Author: Gary Myers MIET MBCS CITP
+# Revision 1.0  -  4th March 2005
+#
+# Modified: Anil Prodduturi 04/11/2014 Customized for Red Hat MysqL environments
+
+#====================================================================
+# Run level information:
+# chkconfig: 2345 99 99
+# description: Secure Tunnel server side script
+# processname: stunnel_server
+#====================================================================
+
+#====================================================================
+# Paths and variables and system checks.
+
+# Source function library (It's a Red Hat thing!)
+. /etc/rc.d/init.d/functions
+
+# Check that networking is up.
+#
+[ ${NETWORKING} ="yes" ] || exit 0
+
+# Path to the executable.
+#
+SEXE=/usr/bin/stunnel
+
+# Path to the configuration file.
+#
+CONF=<%= @conf_dir %>/<%= @name %>.conf
+
+# Check the configuration file exists.
+#
+if [ ! -f $CONF ] ; then
+  echo "The configuration file cannot be found!"
+exit 0
+fi
+
+# Path to the lock file.
+#
+LOCK_FILE=/var/lock/subsys/stunnel_<%= @name %>
+
+#====================================================================
+
+#====================================================================
+# Run controls:
+
+<%- if @client -%>
+prog=$"stunnel_client (<%= name %>)"
+<%- else -%>
+prog=$"stunnel_server (<%= name %>)"
+<%- end -%>
+stunnel_pids=$(ps -ef|grep "<%= @conf_dir %>/<%= @name %>.conf"|grep -v grep|awk '{print $2}'| tr '\n' ' ')
+RETVAL=0
+
+# Start stunnel_server as daemon.
+#
+start() {
+  if [ -f $LOCK_FILE ]; then
+    if [ -z "$stunnel_pids" ]; then
+      echo "$prog seems to have terminated abruptly ! cleaning up and restarting"
+      rm -f $LOCK_FILE
+      echo -n $"Starting $prog: "
+      $SEXE $CONF
+    else
+      echo "$prog is already running!"
+      exit 0
+    fi
+  else
+    echo -n $"Starting $prog: "
+    $SEXE $CONF
+  fi
+
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && success 
+  echo
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+  return $RETVAL
+}
+
+
+# Stop stunnel.
+#
+stop() {
+  if [ ! -f $LOCK_FILE ]; then
+    echo "$prog is not running!"
+    exit 0
+  else
+    if [ -z "$stunnel_pids" ]; then
+      echo $prog was stopped abruptly before ! Cleaning up traces
+      rm -f $LOCK_FILE
+    else
+      echo -n $"Shutting down $prog: "
+      kill $stunnel_pids
+      RETVAL=$?
+      [ $RETVAL -eq 0 ]
+      rm -f $LOCK_FILE
+      echo
+      return $RETVAL
+    fi
+  fi
+}
+
+# See how we were called.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  condrestart)
+    if [ -f $LOCK_FILE ]; then
+      stop
+      start
+      RETVAL=$?
+    fi
+    ;;
+  status)
+    # status stunnel
+    if [ -z "$stunnel_pids" ]; then
+      echo "$prog is not running"
+      RETVAL=1
+    else
+      echo "$prog running on pids : $stunnel_pids"
+      RETVAL=0
+    fi
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    RETVAL=1
+esac
+
+exit $RETVAL

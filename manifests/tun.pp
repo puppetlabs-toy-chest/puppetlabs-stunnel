@@ -137,6 +137,22 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
+  if ( $::osfamily == 'RedHat' ) {
+    file { "/etc/init.d/stunnel_${name}":
+      ensure  => file,
+      content => template("${module_name}/redhat_init.erb"),
+      mode    => '0755',
+      owner   => '0',
+      group   => '0',
+    }
+    service { "stunnel_${name}":
+      ensure      => 'running',
+      enable      => true,
+      has_restart => true,
+      has_status  => true,
+    }
+  }
+
   file { $chroot:
     ensure => directory,
     owner  => $user,
