@@ -15,7 +15,9 @@ CRLfile = <%= crl_file %>
 <%- if @ssl_version_real %>
 sslVersion = <%= ssl_version_real %>
 <%- end -%>
-verify = 2
+<%- if @verify -%>
+verify = <%= @verify %>
+<%- end -%>
 
 chroot = <%= chroot %>
 setuid = <%= user %>
