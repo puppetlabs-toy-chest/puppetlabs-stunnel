@@ -146,10 +146,10 @@ define stunnel::tun(
       group   => '0',
     }
     service { "stunnel_${name}":
-      ensure      => 'running',
-      enable      => true,
-      has_restart => true,
-      has_status  => true,
+      ensure     => 'running',
+      enable     => true,
+      hasrestart => true,
+      hasstatus  => true,
     }
   }
 
