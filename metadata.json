@@ -6,7 +6,7 @@
   "license": "Apache 2.0",
   "source": "https://github.com/puppetlabs/puppetlabs-stunnel",
   "project_page": "https://github.com/puppetlabs/puppetlabs-stunnel",
-  "issues_url": "https://github.com/puppetlabs/puppetlabs-stunnel/issues",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
