@@ -1,0 +1,16 @@
+{
+  "name": "puppetlabs-stunnel",
+  "version": "0.1.0",
+  "author": "puppetlabs",
+  "summary": "A module for creating secure tunnels",
+  "license": "Apache 2.0",
+  "source": "https://github.com/puppetlabs/puppetlabs-stunnel",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-stunnel",
+  "issues_url": "https://github.com/puppetlabs/puppetlabs-stunnel/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 2.3.1"
+    }
+  ]
+}
