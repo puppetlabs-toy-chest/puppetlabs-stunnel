@@ -20,6 +20,24 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*tuns*]
+#   A hash for tunnels, configured via hiera, example:
+#    stunnel::tuns:
+#           'test':
+#              accept: '33066'
+#              connect: '3306'
+#              certificate: '/etc/stunnel/stunnel.pem'
+#              private_key: '/etc/stunnel/stunnel.pem'
+#              ca_file: ''
+#              crl_file: ''
+#              chroot: '/var/lib/stunnel4/'
+#              user: 'stunnel4'
+#              group: 'stunnel4'
+#              pid_file: '/stunnel4.pid'
+#              client: false
+#  host level tunnels can also be configured in hiera and by default will be merged 
+#  together with any gloals
+#
 # === Examples
 #
 # include stunnel
@@ -33,9 +51,11 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 class stunnel(
-  $package  = $stunnel::params::package,
-  $service  = $stunnel::params::service,
-  $conf_dir = $stunnel::params::conf_dir
+  $package   = $stunnel::params::package,
+  $service   = $stunnel::params::service,
+  $conf_dir  = $stunnel::params::conf_dir,
+  $tuns      = $stunnel::params::tuns,
+  $mergetuns = $stunnel::params::mergetuns
 ) inherits stunnel::params {
 
   package { $package:
@@ -66,5 +86,16 @@ class stunnel(
       hasrestart => true,
       hasstatus  => false,
     }
+  }
+
+  if (($host["stunnel::tuns"]) or ($tuns)) {
+    #create tunnels
+    $custom_tuns = $host["stunnel::tuns"]
+    $tunnels = $custom_tuns ? {
+      undef => $tuns,
+      default => merge($tuns, $custom_tuns),
+    }
+    validate_hash($tunnels)
+    create_resources(stunnel::tun, $tunnels)  
   }
 }
