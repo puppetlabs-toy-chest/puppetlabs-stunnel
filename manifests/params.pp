@@ -16,6 +16,12 @@
 # [*conf_dir*]
 #   The default base configuration directory for your version on stunnel.
 #
+# [*tuns*]
+#   A hash of tunnels to be created
+#
+# [*mergetuns*]
+#  Flag to determine if global and host level tunnels should be merged
+#
 # === Authors
 #
 # Cody Herriges <cody@puppetlabs.com>
@@ -38,4 +44,6 @@ class stunnel::params {
       $service = 'stunnel'
     }
   }
+  $tuns      = {}
+  $mergetuns = false
 }
