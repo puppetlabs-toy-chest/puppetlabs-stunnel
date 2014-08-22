@@ -35,8 +35,27 @@
 #              group: 'stunnel4'
 #              pid_file: '/stunnel4.pid'
 #              client: false
+#
 #  host level tunnels can also be configured in hiera and by default will be merged 
-#  together with any gloals
+#  together with any gloals a host level config parameter can can turn this off and
+#  causes host level tunnels only to be used where they exist, $host["stunnel::nomerge"]
+#  example hiera config:
+#    hosts:
+#      'server1':
+#        stunnel::nomerge: true
+#        stunnel::tuns:
+#           'test-nomerge':
+#              accept: '33066'
+#              connect: '3306'
+#              certificate: '/etc/stunnel/stunnel.pem'
+#              private_key: '/etc/stunnel/stunnel.pem'
+#              ca_file: ''
+#              crl_file: ''
+#              chroot: '/var/lib/stunnel4/'
+#              user: 'stunnel4'
+#              group: 'stunnel4'
+#              pid_file: '/stunnel4.pid'
+#              client: false
 #
 # === Examples
 #
@@ -51,11 +70,10 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 class stunnel(
-  $package   = $stunnel::params::package,
-  $service   = $stunnel::params::service,
-  $conf_dir  = $stunnel::params::conf_dir,
-  $tuns      = $stunnel::params::tuns,
-  $mergetuns = $stunnel::params::mergetuns
+  $package     = $stunnel::params::package,
+  $service     = $stunnel::params::service,
+  $conf_dir    = $stunnel::params::conf_dir,
+  $tuns        = $stunnel::params::tuns,
 ) inherits stunnel::params {
 
   package { $package:
@@ -90,10 +108,18 @@ class stunnel(
 
   if (($host["stunnel::tuns"]) or ($tuns)) {
     #create tunnels
-    $custom_tuns = $host["stunnel::tuns"]
-    $tunnels = $custom_tuns ? {
-      undef => $tuns,
-      default => merge($tuns, $custom_tuns),
+
+
+    #if there are host tunnels and nomerge is true only use host tunnels
+    if (( $host["stunnel::tuns"] ) and ( $host["stunnel::nomerge"] )) {
+      $tunnels =  $host["stunnel::tuns"]
+    }
+    else {
+      $custom_tuns = $host["stunnel::tuns"]
+      $tunnels = $custom_tuns ? {
+        undef => $tuns,
+        default => merge($tuns, $custom_tuns),
+      }
     }
     validate_hash($tunnels)
     create_resources(stunnel::tun, $tunnels)  
