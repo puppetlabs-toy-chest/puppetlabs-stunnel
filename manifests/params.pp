@@ -16,6 +16,9 @@
 # [*conf_dir*]
 #   The default base configuration directory for your version on stunnel.
 #
+# [*tuns*]
+#   A hash of tunnels to be created
+#
 # === Authors
 #
 # Cody Herriges <cody@puppetlabs.com>
@@ -38,4 +41,5 @@ class stunnel::params {
       $service = 'stunnel'
     }
   }
+  $tuns      = {}
 }

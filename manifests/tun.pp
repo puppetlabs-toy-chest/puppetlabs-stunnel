@@ -72,6 +72,27 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*options*]
+#   OpenSSL Library options
+#
+# [*retry*]
+#   reconnect a connect+exec section after it's disconnected
+#
+# [*sockets*]
+#  set socket options
+#
+# [*foreground*]
+#  Should stunnel stay in foreground (don't fork) and log to stderr instead of syslog (unless output is specified).
+#
+# [*verify*]
+#  verify peer certificate, verify levels:
+#    0 - Request and ignore peer certificate.
+#    1 - Verify peer certificate if present.
+#    2 - Verify peer certificate.
+#    3 - Verify peer with locally installed certificate.
+#    4 - Ignore CA chain and only verify peer certificate.
+#    undef - no verify
+#
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
@@ -98,20 +119,29 @@
 #
 define stunnel::tun(
     $certificate,
-    $private_key,
-    $ca_file,
-    $crl_file,
+    $private_key = undef,
+    $ca_file = undef,
+    $crl_file = undef,
     $ssl_version = 'TLSv1',
-    $chroot,
-    $user,
-    $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
-    $client,
+    $chroot = undef,
+    $user = undef,
+    $group = undef,
+    $pid_file = undef,
+    $debug_level = undef,
+    $log_dest = undef,
+    $client = false,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::params::conf_dir
+    $conf_dir    = $stunnel::params::conf_dir,
+    $options = undef,
+    $retry = false,
+    $foreground = false,
+    $sockets  = [],
+    $verify = undef,
+    $certificate_content = undef,
+    $key_content = undef,
+    $ca_content = undef,
+    $crl_content = undef
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -126,7 +156,80 @@ define stunnel::tun(
     false => 'no',
   }
 
+  $retry_on = $retry ? {
+    true  => 'yes',
+    false => 'no',
+  }
+  
+  $foreground_on = $foreground ? {
+    true  => 'yes',
+    false => 'no',
+  }
+
+
+
   validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered option is TLSv1. SSLv2 should be avoided.')
+
+
+  #if the content of the certificate file is set, generate it
+  if ( $certificate_content ) {
+    #remove any space characters from the start of each line
+    $real_certificate_content = regsubst($certificate_content, '^ ','','G')
+
+    file { $certificate:
+      ensure  => file,
+      content => $real_certificate_content,
+      mode    => '0644',
+      owner   => '0',
+      group   => '0',
+      require => [Package[$stunnel::params::package]],
+    }
+  }
+
+  #if the content of the private key file is set, generate it
+  if (( $key_content ) and ( $private_key )) {
+    #remove any space characters from the start of each line
+    $real_key_content = regsubst($key_content, '^ ','','G')   
+    
+    file { $private_key:
+      ensure  => file,
+      content => $real_key_content,
+      mode    => '0644',
+      owner   => '0',
+      group   => '0',
+      require => [Package[$stunnel::package]],
+    }
+  }
+  
+   #if the content of the CA file is set, generate it
+  if (( $ca_content ) and ( $ca_file )){
+    #remove any space characters from the start of each line
+    $real_ca_content = regsubst($ca_content, '^ ','','G')  
+         
+    file { $ca_file:
+      ensure  => file,
+      content => $real_ca_content,
+      mode    => '0644',
+      owner   => '0',
+      group   => '0',
+      require => [Package[$stunnel::package]],
+    }
+  }
+
+  #if the content of the CRL file is set, generate it
+  if (( $crl_content ) and ( $crl_file )) {
+    #remove any space characters from the start of each line
+    $real_crl_content = regsubst($crl_content, '^ ','','G')   
+    
+    file { $crl_file:
+      ensure  => file,
+      content => $real_crl_content,
+      mode    => '0644',
+      owner   => '0',
+      group   => '0',
+      require => [Package[$stunnel::package]],
+    }
+  }
 
   file { "${conf_dir}/${name}.conf":
     ensure  => file,
@@ -137,10 +240,17 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  #define chroot directory only if its not been defined (multiple tunnels via hiera *could* use the same chroot dir) and if its required 
+  if ( $chroot ) {
+    if ! defined( File[$chroot] ) {
+      file { $chroot:
+        ensure => directory,
+        owner  => $user,
+        group  => $group,
+        mode   => '0600',
+        require => Package[$stunnel::params::package],
+      }
+    }
   }
+
 }
