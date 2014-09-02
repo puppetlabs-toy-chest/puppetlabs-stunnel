@@ -1,26 +1,26 @@
 ; This stunnel config is managed by Puppet.
 
-<% if @foreground_on %>foreground=<%= @foreground_on %> <% end %>
+<% if @foreground_on %>foreground=<%= @foreground_on %><% end %>
 cert = <%= @certificate %>
-<% if @private_key %>key = <%= @private_key %> <% end %>
-<% if @ca_file %>CAfile = <%= @ca_file %> <% end %>
-<% if @crl_file %>CRLfile = <%= @crl_file %> <% end %>
+<% if @private_key %>key = <%= @private_key %><% end %>
+<% if @ca_file %>CAfile = <%= @ca_file %><% end %>
+<% if @crl_file %>CRLfile = <%= @crl_file %><% end %>
 sslVersion = <%= @ssl_version_real %>
-<% if @verify %>verify = <%= @verify %> <% end %>
+<% if @verify %>verify = <%= @verify %><% end %>
 
-<% if @chroot %>chroot = <%= @chroot %> <% end %>
-<% if @user %>setuid = <%= @user %> <% end %>
-<% if @group %>setgid = <%= @group %> <% end %>
-<% if @pid_file %>pid = <%= @pid_file %> <% end %>
+<% if @chroot %>chroot = <%= @chroot %><% end %>
+<% if @user %>setuid = <%= @user %><% end %>
+<% if @group %>setgid = <%= @group %><% end %>
+<% if @pid_file %>pid = <%= @pid_file %><% end %>
 
-<% if @options %>options = <%= @options %> <% end %>
+<% if @options %>options = <%= @options %><% end %>
 
 <% [@sockets].flatten.compact.each do |socket| %>socket = <%= socket %>
 <% end %>
 
 
-<% if @debug_level %>debug = <%= @debug_level %> <% end %>
-<% if @log_dest %>output = <%= @log_dest %> <% end %>
+<% if @debug_level %>debug = <%= @debug_level %><% end %>
+<% if @log_dest %>output = <%= @log_dest %><% end %>
 
 client = <%= @client_on %>
 
