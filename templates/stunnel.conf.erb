@@ -1,5 +1,9 @@
 ; This stunnel config is managed by Puppet.
 
+<% if @foreground_on -%>
+foreground = <%= @foreground_on %>
+<% end -%>
+
 cert = <%= @certificate %>
 <% if @private_key -%>
 key = <%= @private_key %>
@@ -28,8 +32,10 @@ setgid = <%= @group %>
 pid = <%= @pid_file %>
 <% end -%>
 
-socket = l:TCP_NODELAY=1
-socket = r:TCP_NODELAY=1
+<% if @socket_options -%>
+<% [@socket_options].flatten.compact.each do |socket| %>socket = <%= socket %>
+<% end %>
+<% end -%>
 
 <% if @ssl_options -%>
 options = <%= @ssl_options %>
@@ -47,3 +53,6 @@ client = <%= @client_on %>
 [<%= name -%>]
 accept = <%= @accept %>
 connect = <%= @connect %>
+<% if @retry_on -%>
+retry = <%= @retry_on %>
+<% end -%>

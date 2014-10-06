@@ -90,23 +90,27 @@
 # [*ssl_options*]
 #   OpenSSL library options
 #
+# [*socket_options*]
+#   Set an option on accept/local/remote socket, can be an array of options
+#
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
-#     certificate => "/etc/puppet/ssl/certs/${::clientcert}.pem",
-#     private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
-#     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
-#     crl_file    => '/etc/puppet/ssl/crl.pem',
-#     chroot      => '/var/lib/stunnel4/rsyncd',
-#     user        => 'pe-puppet',
-#     group       => 'pe-puppet',
-#     client      => false,
-#     accept      => '1873',
-#     connect     => '873',
-#     verify      => '2',
-#     retry       => false,
-#     foreground  => false,
-#     ssl_options => 'DONT_INSERT_EMPTY_FRAGMENTS',
+#     certificate    => "/etc/puppet/ssl/certs/${::clientcert}.pem",
+#     private_key    => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
+#     ca_file        => '/etc/puppet/ssl/certs/ca.pem',
+#     crl_file       => '/etc/puppet/ssl/crl.pem',
+#     chroot         => '/var/lib/stunnel4/rsyncd',
+#     user           => 'pe-puppet',
+#     group          => 'pe-puppet',
+#     client         => false,
+#     accept         => '1873',
+#     connect        => '873',
+#     verify         => '2',
+#     retry          => false,
+#     foreground     => false,
+#     ssl_options    => 'DONT_INSERT_EMPTY_FRAGMENTS',
+#     socket_options => ['l:TCP_NODELAY=1','r:TCP_NODELAY=1']
 #   }
 #
 # === Authors
@@ -123,21 +127,22 @@ define stunnel::tun(
     $private_key,
     $ca_file,
     $crl_file,
-    $ssl_version = 'TLSv1',
+    $ssl_version    = 'TLSv1',
     $chroot,
     $user,
     $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
+    $pid_file       = "/${name}.pid",
+    $debug_level    = '0',
+    $log_dest       = "/var/log/${name}.log",
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::params::conf_dir,
-    $verify      = 2,
-    $retry       = false,
-    $foreground  = false,
-    $ssl_options = undef,
+    $conf_dir       = $stunnel::params::conf_dir,
+    $verify         = 2,
+    $retry          = false,
+    $foreground     = false,
+    $ssl_options    = undef,
+    $socket_options = ['l:TCP_NODELAY=1','r:TCP_NODELAY=1']
 ) {
 
   $ssl_version_real = $ssl_version ? {
