@@ -72,19 +72,45 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*verify*]
+# verify peer certificate, verify levels:
+#   0 - Request and ignore peer certificate.
+#   1 - Verify peer certificate if present.
+#   2 - Verify peer certificate.
+#   3 - Verify peer with locally installed certificate.
+#   4 - Ignore CA chain and only verify peer certificate.
+#   undef - no verify
+#
+# [*retry*]
+#   reconnect a connect+exec section after it's disconnected
+#
+# [*foreground*]
+#   Stay in foreground (don't fork) and log to stderr instead of via syslog (unless output is specified).
+#
+# [*ssl_options*]
+#   OpenSSL library options
+#
+# [*socket_options*]
+#   Set an option on accept/local/remote socket, can be an array of options
+#
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
-#     certificate => "/etc/puppet/ssl/certs/${::clientcert}.pem",
-#     private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
-#     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
-#     crl_file    => '/etc/puppet/ssl/crl.pem',
-#     chroot      => '/var/lib/stunnel4/rsyncd',
-#     user        => 'pe-puppet',
-#     group       => 'pe-puppet',
-#     client      => false,
-#     accept      => '1873',
-#     connect     => '873',
+#     certificate    => "/etc/puppet/ssl/certs/${::clientcert}.pem",
+#     private_key    => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
+#     ca_file        => '/etc/puppet/ssl/certs/ca.pem',
+#     crl_file       => '/etc/puppet/ssl/crl.pem',
+#     chroot         => '/var/lib/stunnel4/rsyncd',
+#     user           => 'pe-puppet',
+#     group          => 'pe-puppet',
+#     client         => false,
+#     accept         => '1873',
+#     connect        => '873',
+#     verify         => '2',
+#     retry          => false,
+#     foreground     => false,
+#     ssl_options    => 'DONT_INSERT_EMPTY_FRAGMENTS',
+#     socket_options => ['l:TCP_NODELAY=1','r:TCP_NODELAY=1']
 #   }
 #
 # === Authors
@@ -101,17 +127,22 @@ define stunnel::tun(
     $private_key,
     $ca_file,
     $crl_file,
-    $ssl_version = 'TLSv1',
+    $ssl_version    = 'TLSv1',
     $chroot,
     $user,
     $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
+    $pid_file       = "/${name}.pid",
+    $debug_level    = '0',
+    $log_dest       = "/var/log/${name}.log",
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::params::conf_dir
+    $conf_dir       = $stunnel::params::conf_dir,
+    $verify         = 2,
+    $retry          = false,
+    $foreground     = false,
+    $ssl_options    = undef,
+    $socket_options = ['l:TCP_NODELAY=1','r:TCP_NODELAY=1']
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -126,6 +157,16 @@ define stunnel::tun(
     false => 'no',
   }
 
+  $retry_on = $retry ? {
+    true => 'yes',
+    false => 'no',
+  }
+
+  $foreground_on = $foreground ? {
+    true => 'yes',
+    false => 'no',
+  }
+
   validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered option is TLSv1. SSLv2 should be avoided.')
 
   file { "${conf_dir}/${name}.conf":
@@ -137,10 +178,13 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  #it is possible that multiple stunnel tunnels may share the same chroot dir, therefore define it only if its not already defined
+  if (! defined( File[$chroot] )) {
+    file { $chroot:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
   }
 }
