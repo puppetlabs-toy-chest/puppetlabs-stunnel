@@ -11,7 +11,9 @@ CAfile = <%= @ca_file %>
 CRLfile = <%= @crl_file %>
 <% end -%>
 sslVersion = <%= @ssl_version_real %>
-verify = 2
+<% if @verify -%>
+verify = <%= @verify %>
+<% end -%>
 
 <% if @chroot -%>
 chroot = <%= @chroot %>
@@ -28,6 +30,10 @@ pid = <%= @pid_file %>
 
 socket = l:TCP_NODELAY=1
 socket = r:TCP_NODELAY=1
+
+<% if @ssl_options -%>
+options = <%= @ssl_options %>
+<% end -%>
 
 <% if @debug_level -%>
 debug = <%= @debug_level %>

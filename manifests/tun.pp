@@ -72,6 +72,24 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*verify*]
+# verify peer certificate, verify levels:
+#   0 - Request and ignore peer certificate.
+#   1 - Verify peer certificate if present.
+#   2 - Verify peer certificate.
+#   3 - Verify peer with locally installed certificate.
+#   4 - Ignore CA chain and only verify peer certificate.
+#   undef - no verify
+#
+# [*retry*]
+#   reconnect a connect+exec section after it's disconnected
+#
+# [*foreground*]
+#   Stay in foreground (don't fork) and log to stderr instead of via syslog (unless output is specified).
+#
+# [*ssl_options*]
+#   OpenSSL library options
+#
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
@@ -85,6 +103,10 @@
 #     client      => false,
 #     accept      => '1873',
 #     connect     => '873',
+#     verify      => '2',
+#     retry       => false,
+#     foreground  => false,
+#     ssl_options => 'DONT_INSERT_EMPTY_FRAGMENTS',
 #   }
 #
 # === Authors
@@ -113,6 +135,9 @@ define stunnel::tun(
     $connect,
     $conf_dir    = $stunnel::params::conf_dir,
     $verify      = 2,
+    $retry       = false,
+    $foreground  = false,
+    $ssl_options = undef,
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -124,6 +149,16 @@ define stunnel::tun(
 
   $client_on = $client ? {
     true  => 'yes',
+    false => 'no',
+  }
+
+  $retry_on = $retry ? {
+    true => 'yes',
+    false => 'no',
+  }
+
+  $foreground_on = $foreground ? {
+    true => 'yes',
     false => 'no',
   }
 
