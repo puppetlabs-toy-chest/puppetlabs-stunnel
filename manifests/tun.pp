@@ -111,7 +111,8 @@ define stunnel::tun(
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::params::conf_dir
+    $conf_dir    = $stunnel::params::conf_dir,
+    $verify      = 2,
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -137,10 +138,13 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  #it is possible that multiple stunnel tunnels may share the same chroot dir, therefore define it only if its not already defined
+  if (! defined( File[$chroot] )) {
+    file { $chroot:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
   }
 }
