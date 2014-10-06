@@ -4,16 +4,21 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
 ## Usage
 ```
    stunnel::tun { 'rsyncd':
-     certificate => "/etc/puppet/ssl/certs/${::clientcert}.pem",
-     private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
-     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
-     crl_file    => '/etc/puppet/ssl/crl.pem',
-    chroot      => '/var/lib/stunnel4/rsyncd',
-     user        => 'pe-puppet',
-     group       => 'pe-puppet',
-     client      => false,
-     accept      => '1873',
-     connect     => '873',
+     certificate   => "/etc/puppet/ssl/certs/${::clientcert}.pem",
+     private_key   => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
+     ca_file       => '/etc/puppet/ssl/certs/ca.pem',
+     crl_file      => '/etc/puppet/ssl/crl.pem',
+     chroot        => '/var/lib/stunnel4/rsyncd',
+     user          => 'pe-puppet',
+     group         => 'pe-puppet',
+     client        => false,
+     accept        => '1873',
+     connect       => '873',
+    verify         => '2',
+    retry          => false,
+    foreground     => false,
+    ssl_options    => 'DONT_INSERT_EMPTY_FRAGMENTS',
+    socket_options => ['l:TCP_NODELAY=1','r:TCP_NODELAY=1'],
    }
 ```
 
