@@ -1,22 +1,40 @@
 ; This stunnel config is managed by Puppet.
 
 cert = <%= @certificate %>
+<% if @private_key -%>
 key = <%= @private_key %>
+<% end -%>
+<% if @ca_file -%>
 CAfile = <%= @ca_file %>
+<% end -%>
+<% if @crl_file -%>
 CRLfile = <%= @crl_file %>
+<% end -%>
 sslVersion = <%= @ssl_version_real %>
 verify = 2
 
+<% if @chroot -%>
 chroot = <%= @chroot %>
+<% end -%>
+<% if @user -%>
 setuid = <%= @user %>
+<% end -%>
+<% if @group -%>
 setgid = <%= @group %>
+<% end -%>
+<% if @pid_file -%>
 pid = <%= @pid_file %>
+<% end -%>
 
 socket = l:TCP_NODELAY=1
 socket = r:TCP_NODELAY=1
 
+<% if @debug_level -%>
 debug = <%= @debug_level %>
+<% end -%>
+<% if @log_dest -%>
 output = <%= @log_dest %>
+<% end -%>
 
 client = <%= @client_on %>
 
