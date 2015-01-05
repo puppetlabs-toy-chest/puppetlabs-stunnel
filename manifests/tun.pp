@@ -93,6 +93,9 @@
 # [*socket_options*]
 #   Set an option on accept/local/remote socket, can be an array of options
 #
+# [*fips*]
+#   Enable or disable FIPS 140-2 mode.
+#
 # === Examples
 #
 #   stunnel::tun { 'rsyncd':
@@ -142,7 +145,8 @@ define stunnel::tun(
     $retry          = false,
     $foreground     = false,
     $ssl_options    = undef,
-    $socket_options = ['l:TCP_NODELAY=1','r:TCP_NODELAY=1']
+    $socket_options = ['l:TCP_NODELAY=1','r:TCP_NODELAY=1'],
+    $fips           = undef,
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -150,6 +154,12 @@ define stunnel::tun(
     'sslv2' => 'SSLv2',
     'sslv3' => 'SSLv3',
     default => $ssl_version,
+  }
+
+  $fips_on = $fips ? {
+    true    => 'yes',
+    false   => 'no',
+    default => $fips,
   }
 
   $client_on = $client ? {
