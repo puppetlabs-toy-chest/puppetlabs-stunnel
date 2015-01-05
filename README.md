@@ -19,6 +19,7 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
     foreground     => false,
     ssl_options    => 'DONT_INSERT_EMPTY_FRAGMENTS',
     socket_options => ['l:TCP_NODELAY=1','r:TCP_NODELAY=1'],
+    fips           => false,
    }
 ```
 
