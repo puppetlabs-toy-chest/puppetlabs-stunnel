@@ -40,6 +40,9 @@ pid = <%= @pid_file %>
 <% if @ssl_options -%>
 options = <%= @ssl_options %>
 <% end -%>
+<% if @fips_on -%>
+fips = <%= @fips_on %>
+<% end -%>
 
 <% if @debug_level -%>
 debug = <%= @debug_level %>
