@@ -1,25 +1,62 @@
 ; This stunnel config is managed by Puppet.
 
-cert = <%= certificate %>
-key = <%= private_key %>
-CAfile = <%= ca_file %>
-CRLfile = <%= crl_file %>
-sslVersion = <%= ssl_version_real %>
-verify = 2
+<% if @foreground_on -%>
+foreground = <%= @foreground_on %>
+<% end -%>
 
-chroot = <%= chroot %>
-setuid = <%= user %>
-setgid = <%= group %>
-pid = <%= pid_file %>
+cert = <%= @certificate %>
+<% if @private_key -%>
+key = <%= @private_key %>
+<% end -%>
+<% if @ca_file -%>
+CAfile = <%= @ca_file %>
+<% end -%>
+<% if @crl_file -%>
+CRLfile = <%= @crl_file %>
+<% end -%>
+sslVersion = <%= @ssl_version_real %>
+<% if @verify -%>
+verify = <%= @verify %>
+<% end -%>
 
-socket = l:TCP_NODELAY=1
-socket = r:TCP_NODELAY=1
+<% if @chroot -%>
+chroot = <%= @chroot %>
+<% end -%>
+<% if @user -%>
+setuid = <%= @user %>
+<% end -%>
+<% if @group -%>
+setgid = <%= @group %>
+<% end -%>
+<% if @pid_file -%>
+pid = <%= @pid_file %>
+<% end -%>
 
-debug = <%= debug_level %>
-output = <%= log_dest %>
+<% if @socket_options -%>
+<% [@socket_options].flatten.compact.each do |socket| %>socket = <%= socket %>
+<% end %>
+<% end -%>
 
-client = <%= client_on %>
+<% if @ssl_options -%>
+options = <%= @ssl_options %>
+<% end -%>
+<% if @fips_on -%>
+fips = <%= @fips_on %>
+<% end -%>
 
-[<%= name -%>]
-accept = <%= accept %>
-connect = <%= connect %>
+<% if @debug_level -%>
+debug = <%= @debug_level %>
+<% end -%>
+<% if @log_dest -%>
+output = <%= @log_dest %>
+<% end -%>
+
+client = <%= @client_on %>
+
+[<%= @name -%>]
+accept = <%= @accept %>
+connect = <%= @connect %>
+<% if @retry_on -%>
+retry = <%= @retry_on %>
+<% end -%>
+
