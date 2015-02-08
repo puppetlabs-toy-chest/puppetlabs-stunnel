@@ -261,7 +261,10 @@ define stunnel::tun (
         path    => '/etc/inittab',
         line    => "stunnel_${name}:2345:once:/opt/freeware/bin/stunnel ${conf_dir}/${name}.conf > /dev/console 2>&1",
         match   => "^stunnel_${name}",
-        require => File_line["service ${name}-tun"],
+        require => [
+                    File["${conf_dir}/${name}.conf"],
+                    File_line["service ${name}-tun"],
+                  ],
         notify  => Exec['telinit -q'],
       }
     }
