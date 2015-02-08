@@ -8,13 +8,22 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
      private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
      ca_file     => '/etc/puppet/ssl/certs/ca.pem',
      crl_file    => '/etc/puppet/ssl/crl.pem',
-    chroot      => '/var/lib/stunnel4/rsyncd',
+     chroot      => '/var/lib/stunnel4/rsyncd',
      user        => 'pe-puppet',
      group       => 'pe-puppet',
      client      => false,
      accept      => '1873',
      connect     => '873',
    }
+
+   stunnel::tun { 'ldap':
+     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
+     crl_file    => '/etc/puppet/ssl/crl.pem',
+     client      => true,
+     accept      => 'localhost:1389',
+     connect     => 'ldap.server.local:636',
+   }
+
 ```
 
 ## Notes
