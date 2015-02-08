@@ -111,8 +111,7 @@ class stunnel(
         path    => [ '/bin', '/usr/bin' ],
         unless  => 'grep "ENABLED=1" /etc/default/stunnel4',
         require => Package[$package],
-        before  => Service[$service],
-      }
+      } ->
       service { $service:
         ensure     => running,
         enable     => true,
