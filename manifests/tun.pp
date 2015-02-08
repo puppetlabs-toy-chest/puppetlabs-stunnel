@@ -132,6 +132,7 @@ define stunnel::tun (
   $crl_dir,
   $crl_file,
   $log_dest,
+  $options,
   $private_key,
 ) {
 
@@ -227,9 +228,11 @@ define stunnel::tun (
 
   # If we need a log directory
   if $log_dir {
-    $output = "${log_dir}/${name}.log"
+    $output_real = "${log_dir}/${name}.log"
   } elsif $log_dest {
-    $output = $log_dest
+    $output_real = $log_dest
+  } elsif $output {
+    $output_real = $output
   }
 
   case $::osfamily {
