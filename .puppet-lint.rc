@@ -1,3 +1,4 @@
 --no-autoloader_layout-check
 --no-class_inherits_from_params_class-check
 --no-80chars-check
+--no-parameter_order-check
