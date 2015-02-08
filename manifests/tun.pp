@@ -267,7 +267,8 @@ define stunnel::tun (
     }
 
     default: {
-
     }
+
   }
+
 }
