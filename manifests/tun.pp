@@ -91,27 +91,48 @@
 #
 # Cody Herriges <cody@puppetlabs.com>
 # Sam Kottler <shk@linux.com>
+# Josh Preston <joshua@prestoncentral.com>
 #
 # === Copyright
 #
 # Copyright 2012 Puppet Labs, LLC
 #
-define stunnel::tun(
-    $certificate,
-    $private_key,
-    $ca_file,
-    $crl_file,
-    $ssl_version = 'TLSv1',
-    $chroot,
-    $user,
-    $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
-    $client,
-    $accept,
-    $connect,
-    $conf_dir    = $stunnel::params::conf_dir
+define stunnel::tun (
+  # These are OS dependent...
+  $package      = $::stunnel::package,
+  $service      = $::stunnel::service,
+  $conf_dir     = $::stunnel::conf_dir,
+  $log_dir      = $::stunnel::log_dir,
+  $pid_dir      = $::stunnel::pid_dir,
+  $chroot_dir   = $::stunnel::chroot_dir,
+  # These are stunnel global options - use global first
+  $chroot       = $::stunnel::chroot,
+  $compression  = $::stunnel::compression,
+  $debug_level  = $::stunnel::debug_level,
+  $fips         = $::stunnel::fips,
+  $foreground   = $::stunnel::foreground,
+  $group        = $::stunnel::group,
+  $log_dir      = $::stunnel::log_dir,
+  $output       = $::stunnel::output,
+  $pid_file     = $::stunnel::pid_file,
+  $sockets      = $::stunnel::sockets,
+  $syslog       = $::stunnel::syslog,
+  $user         = $::stunnel::user,
+  # These are service options
+  $debug_level  = 4,
+  $ssl_version  = 'TLSv1',
+  $verify       = 2,
+  $accept,
+  $ca_dir,
+  $ca_file,
+  $certificate,
+  $ciphers,
+  $client,
+  $connect,
+  $crl_dir,
+  $crl_file,
+  $log_dest,
+  $private_key,
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -120,14 +141,66 @@ define stunnel::tun(
     'sslv3' => 'SSLv3',
     default => $ssl_version,
   }
-
-  $client_on = $client ? {
-    true  => 'yes',
-    false => 'no',
-  }
-
   validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered option is TLSv1. SSLv2 should be avoided.')
 
+  # Configure the client
+  $client_on = $client ? {
+    true    => 'yes',
+    false   => 'no',
+    default => $client,
+  }
+  validate_re($client_on, '^yes$|^no$', 'The client option must be true/false or yes/no.')
+
+  # Configure fips
+  $fips_on = $fips ? {
+    true    => 'yes',
+    false   => 'no',
+    default => $fips,
+  }
+  validate_re($fips_on, '^yes$|^no$', 'The fips option must be true/false or yes/no.')
+
+  # Configure fips
+  $foreground_on = $foreground ? {
+    true    => 'yes',
+    false   => 'no',
+    default => $foreground,
+  }
+  validate_re($foreground_on, '^yes$|^no$', 'The foreground option must be true/false or yes/no.')
+
+  # Configure syslog
+  $syslog_on = $syslog ? {
+    true    => 'yes',
+    false   => 'no',
+    default => $syslog,
+  }
+  validate_re($syslog_on, '^yes$|^no$', 'The syslog option must be true/false or yes/no.')
+
+  # Set our accept server and port correctly
+  if $accept {
+    $accept_array  = split($accept, ':')
+    $accept_server = $accept_array[0]
+    $accept_port   = $accept_array[1]
+  } else {
+    fail('No accept server:port specified!')
+  }
+
+  # Set our connect server and port correctly
+  if $connect {
+    $connect_array  = split($connect, ':')
+    $connect_server = $connect_array[0]
+    $connect_port   = $connect_array[1]
+  } else {
+    fail('No connect server:port specified!')
+  }
+
+  # Make sure our service line exists
+  file_line { "service ${name}-tun":
+    path  => '/etc/services',
+    line  => "${name}-tun        ${accept_port}/tcp",
+    match => "^${name}-tun",
+  }
+
+  # Create our configuration
   file { "${conf_dir}/${name}.conf":
     ensure  => file,
     content => template("${module_name}/stunnel.conf.erb"),
@@ -137,10 +210,61 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  # If we need a chroot directory
+  if $chroot_dir {
+    $chroot_real = "${chroot_dir}/${name}"
+  } elsif $chroot {
+    $chroot_real = $chroot
+  }
+  if $chroot_real {
+    file { $chroot_real:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
+  }
+
+  # If we need a log directory
+  if $log_dir {
+    $output = "${log_dir}/${name}.log"
+  } elsif $log_dest {
+    $output = $log_dest
+  }
+
+  case $::osfamily {
+
+    'RedHat': {
+      file { "/etc/init.d/${service}-${name}":
+        ensure  => file,
+        owner   => 0,
+        group   => 0,
+        mode    => '0755',
+        content => template("${module_name}/init.d/stunnel.erb"),
+        require => Package[$package],
+        before  => Service["${service}-${name}"],
+      } ~>
+      service { "${service}-${name}":
+        ensure     => running,
+        enable     => true,
+        hasrestart => true,
+        hasstatus  => true,
+        require    => File_line["service ${name}-tun"],
+      }
+    }
+
+    'AIX': {
+      file_line { "inittab stunnel_${name}":
+        path    => '/etc/inittab',
+        line    => "stunnel_${name}:2345:once:/opt/freeware/bin/stunnel ${conf_dir}/${name}.conf > /dev/console 2>&1",
+        match   => "^stunnel_${name}",
+        require => File_line["service ${name}-tun"],
+        notify  => Exec['telinit -q'],
+      }
+    }
+
+    default: {
+
+    }
   }
 }

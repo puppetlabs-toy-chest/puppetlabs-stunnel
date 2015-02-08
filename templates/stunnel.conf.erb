@@ -1,25 +1,117 @@
-; This stunnel config is managed by Puppet.
+; This stunnel-<%= @name -%> config is managed by Puppet.
 
-cert = <%= certificate %>
-key = <%= private_key %>
-CAfile = <%= ca_file %>
-CRLfile = <%= crl_file %>
-sslVersion = <%= ssl_version_real %>
-verify = 2
+<% if @chroot_real -%>
+; Note that pid is created inside of the chroot jail
+chroot = <%= @chroot_real -%>
+<% end -%>
 
-chroot = <%= chroot %>
-setuid = <%= user %>
-setgid = <%= group %>
-pid = <%= pid_file %>
+<% if @compression -%>
+compression = <%= @compression %>
+<% end -%>
 
-socket = l:TCP_NODELAY=1
-socket = r:TCP_NODELAY=1
-
+<% if @debug_level -%>
+; Set our debug level
 debug = <%= debug_level %>
-output = <%= log_dest %>
+<% end -%>
 
-client = <%= client_on %>
+<% if @fips_on -%>
+fips = <%= @fips_on %>
+<% end -%>
 
-[<%= name -%>]
-accept = <%= accept %>
-connect = <%= connect %>
+<% if @foreground_on -%>
+foreground = <%= @foreground_on %>
+<% end -%>
+
+<% if @log -%>
+log = <%= @log %>
+<% end -%>
+
+<% if @output -%>
+output = <%= @output %>
+<% end -%>
+
+<% if @pid_file -%>
+pid = <%= @pid_file %>
+<% end -%>
+
+<% if @group -%>
+setgid = <%= @group %>
+<% end -%>
+
+<% if @user -%>
+setuid = <%= @user %>
+<% end -%>
+
+<% if @sockets -%>
+; Some performance tunings
+<% sockets.each do |socket| -%>
+socket = <%= @socket %>
+<% end -%>
+<% end -%>
+
+<% if @syslog_on -%>
+syslog = <%= @syslog_on %>
+<% end -%>
+
+[<%= @name -%>]
+<% if @accept_server and @accept_port -%>
+accept = <%= @accept_server -%>:<%= @accept_port -%>
+<% elsif @accept -%>
+accept = <%= @accept -%>
+<% end -%>
+
+<% if @ca_dir -%>
+CApath = <%= @ca_dir %>
+<% end -%>
+
+<% if @ca_file -%>
+CAfile = <%= @ca_file %>
+<% end -%>
+
+<% if @certificate -%>
+cert = <%= @certificate %>
+<% end -%>
+
+<% if @ciphers -%>
+ciphers = <%= @ciphers %>
+<% end -%>
+
+<% if @client_on -%>
+client = <%= @client_on %>
+<% end -%>
+
+<% if @connect_server and @connect_port -%>
+connect = <%= @connect_server -%>:<%= @connect_port -%>
+<% elsif @connect -%>
+connect = <%= @connect %>
+<% end -%>
+
+<% if @crl_dir -%>
+CRLpath = <%= @crl_dir %>
+<% end -%>
+
+<% if @crl_file -%>
+CRLfile = <%= @crl_file %>
+<% end -%>
+
+<% if @options -%>
+<% options.each do |option| -%>
+options = <%= @option %>
+<% end -%>
+<% end -%>
+
+<% if @private_key -%>
+key = <%= @private_key %>
+<% end -%>
+
+<% if @protocol -%>
+protocol = <%= @protocol %>
+<% end -%>
+
+<% if @ssl_version_real -%>
+sslVersion = <%= ssl_version_real %>
+<% end -%>
+
+<% if @verify -%>
+verify = <% @verify %>
+<% end -%>
