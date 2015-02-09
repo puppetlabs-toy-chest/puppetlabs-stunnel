@@ -27,9 +27,9 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
 ```
 
 ## Notes
-* There is no sysvinit script installed as part of the `stunnel` package on Red Hat systems.
+* This includes an sysvinit script because the `stunnel` package on Red Hat systems does not provide one.
 * Use of SSLv2 is highly discouraged because it's known to be vulnerable.
-* The chroot defined in `stunnel::tun` needs to be manually created.
+* AIX support does not include package installation
 
 ## Authors
 * Cody Herriages <cody@puppetlabs.com>
