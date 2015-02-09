@@ -98,6 +98,22 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 define stunnel::tun (
+  # These are service options
+  $accept,
+  $ca_dir,
+  $ca_file,
+  $certificate,
+  $ciphers,
+  $client,
+  $connect,
+  $crl_dir,
+  $crl_file,
+  $log_dest,
+  $options,
+  $private_key,
+  $debug_level  = 4,
+  $ssl_version  = 'TLSv1',
+  $verify       = 2,
   # These are OS dependent...
   $package      = $::stunnel::package,
   $service      = $::stunnel::service,
@@ -118,22 +134,6 @@ define stunnel::tun (
   $sockets      = $::stunnel::sockets,
   $syslog       = $::stunnel::syslog,
   $user         = $::stunnel::user,
-  # These are service options
-  $debug_level  = 4,
-  $ssl_version  = 'TLSv1',
-  $verify       = 2,
-  $accept,
-  $ca_dir,
-  $ca_file,
-  $certificate,
-  $ciphers,
-  $client,
-  $connect,
-  $crl_dir,
-  $crl_file,
-  $log_dest,
-  $options,
-  $private_key,
 ) {
 
   $ssl_version_real = $ssl_version ? {
