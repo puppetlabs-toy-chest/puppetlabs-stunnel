@@ -34,3 +34,4 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
 ## Authors
 * Cody Herriages <cody@puppetlabs.com>
 * Sam Kottler <shk@linux.com>
+* Josh Preston <joshua@prestoncentral.com>
