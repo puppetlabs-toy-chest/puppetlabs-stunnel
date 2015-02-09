@@ -179,8 +179,13 @@ define stunnel::tun (
   # Set our accept server and port correctly
   if $accept {
     $accept_array  = split($accept, ':')
-    $accept_server = $accept_array[0]
-    $accept_port   = $accept_array[1]
+    if $accept_array[1] {
+      $accept_server = $accept_array[0]
+      $accept_port   = $accept_array[1]
+    } else {
+      $accept_server = 'localhost'
+      $accept_port   = $accept_array[0]
+    }
   } else {
     fail('No accept server:port specified!')
   }
@@ -188,8 +193,13 @@ define stunnel::tun (
   # Set our connect server and port correctly
   if $connect {
     $connect_array  = split($connect, ':')
-    $connect_server = $connect_array[0]
-    $connect_port   = $connect_array[1]
+    if $connect_array[1] {
+      $connect_server = $connect_array[0]
+      $connect_port   = $connect_array[1]
+    } else {
+      $connect_server = 'localhost'
+      $connect_port   = $connect_array[0]
+    }
   } else {
     fail('No connect server:port specified!')
   }
