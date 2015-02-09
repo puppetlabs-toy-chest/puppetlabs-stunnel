@@ -56,7 +56,7 @@
 #
 # Cody Herriges <cody@puppetlabs.com>
 # Sam Kottler <shk@linux.com>
-# Josh Preston <joshua@prestoncentral.com>
+# Josh Preston
 #
 # === Copyright
 #

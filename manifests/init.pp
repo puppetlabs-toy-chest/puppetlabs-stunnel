@@ -27,7 +27,7 @@
 # === Authors
 #
 # Cody Herriges <cody@puppetlabs.com>
-# Josh Preston <joshua@prestoncentral.com>
+# Josh Preston
 #
 # === Copyright
 #
