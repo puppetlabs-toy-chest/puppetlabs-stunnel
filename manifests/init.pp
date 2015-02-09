@@ -7,17 +7,17 @@
 #
 # [*package*]
 #   The package name that represents the stunnel application on your
-#   distribution.  By default we look this value up in a stunnel::data class,
+#   distribution.  By default we look this value up in a stunnel::params class,
 #   which has a list of common answers.
 #
 # [*service*]
 #   The service name that represents the stunnel application on your
-#   distribution.  By default we look this value up in a stunnel::data class,
+#   distribution.  By default we look this value up in a stunnel::params class,
 #   which has a list of common answers.
 #
 # [*conf_dir*]
 #   The default base configuration directory for your version on stunnel.
-#   By default we look this value up in a stunnel::data class, which has a
+#   By default we look this value up in a stunnel::params class, which has a
 #   list of common answers.
 #
 # === Examples
