@@ -1,5 +1,5 @@
 ## Summary
-Provides a defined resource type for managing stunnel on Debian and Red Hat systems.
+Provides a defined resource type for managing stunnel on AIX, Debian and Red Hat systems.
 
 ## Usage
 ```
