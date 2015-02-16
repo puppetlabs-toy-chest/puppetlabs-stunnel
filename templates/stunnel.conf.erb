@@ -94,7 +94,7 @@ CRLpath = <%= @crl_dir %>
 CRLfile = <%= @crl_file %>
 <% end -%>
 
-<% if @options -%>
+<% if @options and !@options.empty? -%>
 <% options.each do |option| -%>
 options = <%= @option %>
 <% end -%>
