@@ -84,7 +84,7 @@ stop() {
  else
 
  echo -n $"Shutting down $prog: "
- killproc stunnel-<%= @name -%>
+ ps -ef | grep stunnel | grep $CONF | grep -v grep | awk '{ print $2 }' | xargs kill > /dev/null 2>&1
  RETVAL=$?
  [ $RETVAL -eq 0 ]
  rm -f $LOCK_FILE
@@ -114,7 +114,7 @@ case "$1" in
  fi
  ;;
  status)
- status stunnel-<%= @name -%>
+ ps -ef | grep stunnel | grep $CONF | grep -v grep > /dev/null 2>&1
  RETVAL=$?
  ;;
  *)
