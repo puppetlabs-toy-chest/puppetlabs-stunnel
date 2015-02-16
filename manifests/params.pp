@@ -98,6 +98,7 @@ class stunnel::params {
   $debug_level = '4'
   $fips        = 'no'
   $foreground  = 'no'
+  $service     = 'stunnel'
   $log         = 'append'
   $output      = '/var/log/stunnel.log'
   $sockets     = [
