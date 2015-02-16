@@ -113,7 +113,7 @@ define stunnel::tun (
   $private_key  = undef,
   $debug_level  = 4,
   $ssl_version  = 'TLSv1',
-  $verify       = 2,
+  $verify       = 'level 3',
   # These are OS dependent...
   $package      = $::stunnel::package,
   $service      = $::stunnel::service,
@@ -266,6 +266,7 @@ define stunnel::tun (
         hasrestart => true,
         hasstatus  => true,
         require    => File_line["service ${name}-tun"],
+        subscribe  => File["${conf_dir}/${name}.conf"],
       }
     }
 
