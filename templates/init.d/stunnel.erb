@@ -86,8 +86,8 @@ stop() {
  echo -n $"Shutting down $prog: "
  ps -ef | grep stunnel | grep $CONF | grep -v grep | awk '{ print $2 }' | xargs kill > /dev/null 2>&1
  RETVAL=$?
- [ $RETVAL -eq 0 ]
- rm -f $LOCK_FILE
+ [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+ [ $RETVAL -eq 0 ] && echo "$prog stopped" || echo "$prog failed stopping"
  echo
  return $RETVAL
 
@@ -116,6 +116,7 @@ case "$1" in
  status)
  ps -ef | grep stunnel | grep $CONF | grep -v grep > /dev/null 2>&1
  RETVAL=$?
+ [ $RETVAL -eq 0 ] && echo "$prog is running" || echo "$prog is stopped"
  ;;
  *)
  echo $"Usage: $0 {start|stop|restart|condrestart|status}"
