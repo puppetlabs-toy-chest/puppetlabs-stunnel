@@ -101,9 +101,5 @@ class stunnel::params {
   $service     = 'stunnel'
   $log         = 'append'
   $output      = '/var/log/stunnel.log'
-  $sockets     = [
-                  'l:TCP_NODELAY=1',
-                  'r:TCP_NODELAY=1',
-                ]
   $syslog      = 'yes'
 }

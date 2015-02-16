@@ -131,7 +131,10 @@ define stunnel::tun (
   $log_dir      = $::stunnel::log_dir,
   $output       = $::stunnel::output,
   $pid_file     = $::stunnel::pid_file,
-  $sockets      = $::stunnel::sockets,
+  $sockets      = [
+                  'l:TCP_NODELAY=1',
+                  'r:TCP_NODELAY=1',
+                  ],
   $syslog       = $::stunnel::syslog,
   $user         = $::stunnel::user,
 ) {
