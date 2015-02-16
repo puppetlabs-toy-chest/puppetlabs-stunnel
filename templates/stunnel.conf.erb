@@ -42,7 +42,7 @@ setgid = <%= @group %>
 setuid = <%= @user %>
 <% end -%>
 
-<% if @sockets -%>
+<% if @sockets and !@sockets.empty? -%>
 ; Some performance tunings
 <% sockets.each do |socket| -%>
 socket = <%= @socket %>
@@ -68,7 +68,7 @@ CApath = <%= @ca_dir %>
 CAfile = <%= @ca_file %>
 <% end -%>
 
-<% if @certificate -%>
+<% if @certificate and !@certificate.empty? -%>
 cert = <%= @certificate %>
 <% end -%>
 
