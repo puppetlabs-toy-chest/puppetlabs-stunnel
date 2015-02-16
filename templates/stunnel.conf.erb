@@ -86,11 +86,11 @@ connect = <%= @connect_server -%>:<%= @connect_port -%>
 connect = <%= @connect %>
 <% end -%>
 
-<% if @crl_dir -%>
+<% if @crl_dir and !@crl_dir.empty? -%>
 CRLpath = <%= @crl_dir %>
 <% end -%>
 
-<% if @crl_file -%>
+<% if @crl_file and !@crl_file.empty? -%>
 CRLfile = <%= @crl_file %>
 <% end -%>
 
@@ -100,18 +100,18 @@ options = <%= @option %>
 <% end -%>
 <% end -%>
 
-<% if @private_key -%>
+<% if @private_key and !@private_key.empty? -%>
 key = <%= @private_key %>
 <% end -%>
 
-<% if @protocol -%>
+<% if @protocol and !@protocol.empty? -%>
 protocol = <%= @protocol %>
 <% end -%>
 
-<% if @ssl_version_real -%>
+<% if @ssl_version_real and !@ssl_version_real.empty? -%>
 sslVersion = <%= ssl_version_real %>
 <% end -%>
 
-<% if @verify -%>
+<% if @verify and !@verify.empty? -%>
 verify = <% @verify %>
 <% end -%>
