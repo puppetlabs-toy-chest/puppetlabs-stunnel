@@ -111,9 +111,10 @@ define stunnel::tun (
   $log_dest     = undef,
   $options      = undef,
   $private_key  = undef,
+  $sockets      = undef,
   $debug_level  = 4,
   $ssl_version  = 'TLSv1',
-  $verify       = 'level 3',
+  $verify_stun  = 'level 3',
   # These are OS dependent...
   $package      = $::stunnel::package,
   $service      = $::stunnel::service,
@@ -131,10 +132,6 @@ define stunnel::tun (
   $log_dir      = $::stunnel::log_dir,
   $output       = $::stunnel::output,
   $pid_file     = $::stunnel::pid_file,
-  $sockets      = [
-                  'l:TCP_NODELAY=1',
-                  'r:TCP_NODELAY=1',
-                  ],
   $syslog       = $::stunnel::syslog,
   $user         = $::stunnel::user,
 ) {
