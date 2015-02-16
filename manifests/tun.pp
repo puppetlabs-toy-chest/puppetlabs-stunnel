@@ -283,6 +283,7 @@ define stunnel::tun (
     }
 
     default: {
+      fail("Unsupported OS ${::operatingsystem}")
     }
 
   }

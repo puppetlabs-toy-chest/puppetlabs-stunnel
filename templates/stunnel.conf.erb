@@ -44,8 +44,8 @@ setuid = <%= @user %>
 
 <% if @sockets and !@sockets.empty? -%>
 ; Some performance tunings
-<% sockets.each do |socket| -%>
-socket = <%= @socket %>
+<% sockets.each do |sock| -%>
+socket = <%= @sock %>
 <% end -%>
 <% end -%>
 
