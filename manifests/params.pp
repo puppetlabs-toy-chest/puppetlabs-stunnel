@@ -94,7 +94,7 @@ class stunnel::params {
 
   }
 
-  $compression = 'deflate'
+  $compression = 'zlib'
   $debug_level = '4'
   $fips        = 'no'
   $foreground  = 'no'
