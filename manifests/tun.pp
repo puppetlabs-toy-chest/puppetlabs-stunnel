@@ -256,7 +256,7 @@ define stunnel::tun (
         content => template("${module_name}/init.d/stunnel.erb"),
         require => Package[$package],
         before  => Service["${service}-${name}"],
-      }
+      } ~>
       service { "${service}-${name}":
         ensure     => running,
         enable     => true,
