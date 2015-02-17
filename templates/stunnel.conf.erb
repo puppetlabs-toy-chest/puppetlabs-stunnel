@@ -112,6 +112,6 @@ protocol = <%= @protocol %>
 sslVersion = <%= ssl_version_real %>
 <% end -%>
 
-#<% if @verify_stun and !@verify_stun.empty? -%>
-#verify = <% @verify_stun %>
-#<% end -%>
+<% if @verify_stun and !@verify_stun.empty? -%>
+;verify = <% @verify_stun %>
+<% end -%>
