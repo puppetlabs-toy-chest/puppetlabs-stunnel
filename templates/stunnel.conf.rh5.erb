@@ -1,51 +1,17 @@
-<% if @ca_dir -%>
-CApath = <%= @ca_dir %>
-<% end -%>
-
-<% if @ca_file -%>
-CAfile = <%= @ca_file %>
-<% end -%>
-
-<% if @certificate and !@certificate.empty? -%>
-cert = <%= @certificate %>
-<% end -%>
-
-<% if @ciphers -%>
-ciphers = <%= @ciphers %>
-<% end -%>
-
-<% if @client_on -%>
-client = <%= @client_on %>
-<% end -%>
+; This stunnel-<%= @name -%> config is managed by Puppet.
 
 <% if @chroot_real -%>
+; Note that pid is created inside of the chroot jail
 chroot = <%= @chroot_real -%>
 <% end -%>
 
-<% if @crl_dir and !@crl_dir.empty? -%>
-CRLpath = <%= @crl_dir %>
-<% end -%>
-
-<% if @crl_file and !@crl_file.empty? -%>
-CRLfile = <%= @crl_file %>
-<% end -%>
-
-<% if @options and !@options.empty? -%>
-<% options.each do |option| -%>
-options = <%= @option %>
-<% end -%>
-<% end -%>
-
-<% if @private_key and !@private_key.empty? -%>
-key = <%= @private_key %>
+<% if @compression -%>
+compression = <%= @compression %>
 <% end -%>
 
 <% if @debug_level -%>
+; Set our debug level
 debug = <%= debug_level %>
-<% end -%>
-
-<% if @fips_on -%>
-fips = <%= @fips_on %>
 <% end -%>
 
 <% if @foreground_on -%>
@@ -79,11 +45,6 @@ socket = <%= @sock %>
 <% end -%>
 <% end -%>
 
-verify = level 2
-
-
-
-
 [<%= @name -%>]
 <% if @accept_server and @accept_port -%>
 accept = <%= @accept_server -%>:<%= @accept_port -%>
@@ -91,6 +52,25 @@ accept = <%= @accept_server -%>:<%= @accept_port -%>
 accept = <%= @accept -%>
 <% end -%>
 
+<% if @ca_dir -%>
+CApath = <%= @ca_dir %>
+<% end -%>
+
+<% if @ca_file -%>
+CAfile = <%= @ca_file %>
+<% end -%>
+
+<% if @certificate and !@certificate.empty? -%>
+cert = <%= @certificate %>
+<% end -%>
+
+<% if @ciphers -%>
+ciphers = <%= @ciphers %>
+<% end -%>
+
+<% if @client_on -%>
+client = <%= @client_on %>
+<% end -%>
 
 <% if @connect_server and @connect_port -%>
 connect = <%= @connect_server -%>:<%= @connect_port -%>
@@ -98,7 +78,28 @@ connect = <%= @connect_server -%>:<%= @connect_port -%>
 connect = <%= @connect %>
 <% end -%>
 
+<% if @crl_dir and !@crl_dir.empty? -%>
+CRLpath = <%= @crl_dir %>
+<% end -%>
+
+<% if @crl_file and !@crl_file.empty? -%>
+CRLfile = <%= @crl_file %>
+<% end -%>
+
+<% if @options and !@options.empty? -%>
+<% options.each do |option| -%>
+options = <%= @option %>
+<% end -%>
+<% end -%>
+
+<% if @private_key and !@private_key.empty? -%>
+key = <%= @private_key %>
+<% end -%>
+
 <% if @protocol and !@protocol.empty? -%>
 protocol = <%= @protocol %>
 <% end -%>
 
+<% if @verify_stun and !@verify_stun.empty? -%>
+;verify = <% @verify_stun %>
+<% end -%>
