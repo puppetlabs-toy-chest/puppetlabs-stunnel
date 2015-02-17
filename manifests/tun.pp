@@ -247,7 +247,7 @@ define stunnel::tun (
 
   case $::osfamily {
 
-    'RedHat': {
+    'RedHat', 'CentOS': {
       file { "/etc/init.d/${service}-${name}":
         ensure  => file,
         owner   => 0,
