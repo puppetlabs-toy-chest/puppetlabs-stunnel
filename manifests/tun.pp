@@ -211,8 +211,16 @@ define stunnel::tun (
     match => "^${name}-tun",
   }
 
-  if $::operatingsystem == 'RedHat' and $::operatingsystemmajrelease == '4' {
-    $diff_template = '.rh4'
+  if $::operatingsystem == 'RedHat' {
+    case $::operatingsystemmajrelease {
+      '4': {
+        $diff_template = '.rh4'
+      }
+      '5': {
+        $diff_template = '.rh5'
+      }
+      default: { }
+    }
   }
 
   # Create our configuration
