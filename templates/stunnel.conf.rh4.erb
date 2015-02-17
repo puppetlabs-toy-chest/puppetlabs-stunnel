@@ -1,0 +1,131 @@
+foreground = no
+CApath = /etc/openldap/cacerts
+CAfile = /etc/openldap/cacerts/dswincRootCA.crt
+client = yes
+
+
+foreground      = yes|no foreground mode (don't fork, log to stderr)
+key             = certificate private key
+options         = SSL option
+                  set an SSL option
+output          = file to append log messages
+pid             = pid file (empty to disable creating)
+RNDbytes        = bytes to read from random seed files
+RNDfile         = path to file with random seed data
+RNDoverwrite    = yes|no overwrite seed datafiles with new random data
+service         = service name
+session         = session cache timeout (in seconds)
+setgid          = groupname for setgid()
+setuid          = username for setuid()
+socket          = a|l|r:option=value[:value]
+                  set an option on accept/local/remote socket
+verify          = level of peer certificate verification
+                  level 1 - verify peer certificate if present
+                  level 2 - require valid peer certificate always
+                  level 3 - verify peer with locally installed certificate
+
+
+<% if @ca_dir -%>
+CApath = <%= @ca_dir %>
+<% end -%>
+
+<% if @ca_file -%>
+CAfile = <%= @ca_file %>
+<% end -%>
+
+<% if @certificate and !@certificate.empty? -%>
+cert = <%= @certificate %>
+<% end -%>
+
+<% if @ciphers -%>
+ciphers = <%= @ciphers %>
+<% end -%>
+
+<% if @client_on -%>
+client = <%= @client_on %>
+<% end -%>
+
+<% if @chroot_real -%>
+chroot = <%= @chroot_real -%>
+<% end -%>
+
+<% if @crl_dir and !@crl_dir.empty? -%>
+CRLpath = <%= @crl_dir %>
+<% end -%>
+
+<% if @crl_file and !@crl_file.empty? -%>
+CRLfile = <%= @crl_file %>
+<% end -%>
+
+<% if @options and !@options.empty? -%>
+<% options.each do |option| -%>
+options = <%= @option %>
+<% end -%>
+<% end -%>
+
+<% if @private_key and !@private_key.empty? -%>
+key = <%= @private_key %>
+<% end -%>
+
+<% if @debug_level -%>
+debug = <%= debug_level %>
+<% end -%>
+
+<% if @fips_on -%>
+fips = <%= @fips_on %>
+<% end -%>
+
+<% if @foreground_on -%>
+foreground = <%= @foreground_on %>
+<% end -%>
+
+<% if @log -%>
+log = <%= @log %>
+<% end -%>
+
+<% if @output_real -%>
+output = <%= @output_real %>
+<% end -%>
+
+<% if @pid_file -%>
+pid = <%= @pid_file %>
+<% end -%>
+
+<% if @group -%>
+setgid = <%= @group %>
+<% end -%>
+
+<% if @user -%>
+setuid = <%= @user %>
+<% end -%>
+
+<% if @sockets and !@sockets.empty? -%>
+; Some performance tunings
+<% sockets.each do |sock| -%>
+socket = <%= @sock %>
+<% end -%>
+<% end -%>
+
+verify = level 2
+
+
+
+
+[<%= @name -%>]
+<% if @accept_server and @accept_port -%>
+accept = <%= @accept_server -%>:<%= @accept_port -%>
+<% elsif @accept -%>
+accept = <%= @accept -%>
+<% end -%>
+
+
+<% if @connect_server and @connect_port -%>
+connect = <%= @connect_server -%>:<%= @connect_port -%>
+<% elsif @connect -%>
+connect = <%= @connect %>
+<% end -%>
+
+<% if @protocol and !@protocol.empty? -%>
+protocol = <%= @protocol %>
+<% end -%>
+
