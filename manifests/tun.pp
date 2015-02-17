@@ -218,7 +218,7 @@ define stunnel::tun (
   # Create our configuration
   file { "${conf_dir}/${name}.conf":
     ensure  => file,
-    content => template("${module_name}/stunnel.conf.${diff_template}erb"),
+    content => template("${module_name}/stunnel.conf${diff_template}.erb"),
     mode    => '0644',
     owner   => '0',
     group   => '0',
