@@ -14,10 +14,6 @@ compression = <%= @compression %>
 debug = <%= debug_level %>
 <% end -%>
 
-<% if @fips_on -%>
-fips = <%= @fips_on %>
-<% end -%>
-
 <% if @foreground_on -%>
 foreground = <%= @foreground_on %>
 <% end -%>
@@ -47,10 +43,6 @@ setuid = <%= @user %>
 <% sockets.each do |sock| -%>
 socket = <%= @sock %>
 <% end -%>
-<% end -%>
-
-<% if @syslog_on -%>
-syslog = <%= @syslog_on %>
 <% end -%>
 
 [<%= @name -%>]
@@ -106,10 +98,6 @@ key = <%= @private_key %>
 
 <% if @protocol and !@protocol.empty? -%>
 protocol = <%= @protocol %>
-<% end -%>
-
-<% if @ssl_version_real and !@ssl_version_real.empty? -%>
-sslVersion = <%= ssl_version_real %>
 <% end -%>
 
 <% if @verify_stun and !@verify_stun.empty? -%>

@@ -1,0 +1,100 @@
+<% if @ca_dir -%>
+CApath = <%= @ca_dir %>
+<% end -%>
+
+<% if @ca_file -%>
+CAfile = <%= @ca_file %>
+<% end -%>
+
+<% if @certificate and !@certificate.empty? -%>
+cert = <%= @certificate %>
+<% end -%>
+
+<% if @ciphers -%>
+ciphers = <%= @ciphers %>
+<% end -%>
+
+<% if @client_on -%>
+client = <%= @client_on %>
+<% end -%>
+
+<% if @chroot_real -%>
+chroot = <%= @chroot_real -%>
+<% end -%>
+
+<% if @crl_dir and !@crl_dir.empty? -%>
+CRLpath = <%= @crl_dir %>
+<% end -%>
+
+<% if @crl_file and !@crl_file.empty? -%>
+CRLfile = <%= @crl_file %>
+<% end -%>
+
+<% if @options and !@options.empty? -%>
+<% options.each do |option| -%>
+options = <%= @option %>
+<% end -%>
+<% end -%>
+
+<% if @private_key and !@private_key.empty? -%>
+key = <%= @private_key %>
+<% end -%>
+
+<% if @debug_level -%>
+debug = <%= debug_level %>
+<% end -%>
+
+<% if @foreground_on -%>
+foreground = <%= @foreground_on %>
+<% end -%>
+
+<% if @log -%>
+log = <%= @log %>
+<% end -%>
+
+<% if @output_real -%>
+output = <%= @output_real %>
+<% end -%>
+
+<% if @pid_file -%>
+pid = <%= @pid_file %>
+<% end -%>
+
+<% if @group -%>
+setgid = <%= @group %>
+<% end -%>
+
+<% if @user -%>
+setuid = <%= @user %>
+<% end -%>
+
+<% if @sockets and !@sockets.empty? -%>
+; Some performance tunings
+<% sockets.each do |sock| -%>
+socket = <%= @sock %>
+<% end -%>
+<% end -%>
+
+verify = level 2
+
+
+
+
+[<%= @name -%>]
+<% if @accept_server and @accept_port -%>
+accept = <%= @accept_server -%>:<%= @accept_port -%>
+<% elsif @accept -%>
+accept = <%= @accept -%>
+<% end -%>
+
+
+<% if @connect_server and @connect_port -%>
+connect = <%= @connect_server -%>:<%= @connect_port -%>
+<% elsif @connect -%>
+connect = <%= @connect %>
+<% end -%>
+
+<% if @protocol and !@protocol.empty? -%>
+protocol = <%= @protocol %>
+<% end -%>
+

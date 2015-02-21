@@ -1,12 +1,25 @@
 {
   "name": "puppetlabs-stunnel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "puppetlabs",
   "summary": "A module for creating secure tunnels",
   "license": "Apache 2.0",
   "source": "https://github.com/puppetlabs/puppetlabs-stunnel",
   "project_page": "https://github.com/puppetlabs/puppetlabs-stunnel",
   "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "AIX"
+    },{
+      "operatingsystem": "CentOS"
+    },{
+      "operatingsystem": "Debian"
+    },{
+      "operatingsystem": "RedHat"
+    },{
+      "operatingsystem": "Ubuntu"
+    }
+  ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",

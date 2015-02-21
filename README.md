@@ -1,5 +1,5 @@
 ## Summary
-Provides a defined resource type for managing stunnel on Debian and Red Hat systems.
+Provides a defined resource type for managing stunnel on AIX, Debian and Red Hat systems.
 
 ## Usage
 ```
@@ -8,20 +8,30 @@ Provides a defined resource type for managing stunnel on Debian and Red Hat syst
      private_key => "/etc/puppet/ssl/private_keys/${::clientcert}.pem",
      ca_file     => '/etc/puppet/ssl/certs/ca.pem',
      crl_file    => '/etc/puppet/ssl/crl.pem',
-    chroot      => '/var/lib/stunnel4/rsyncd',
+     chroot      => '/var/lib/stunnel4/rsyncd',
      user        => 'pe-puppet',
      group       => 'pe-puppet',
      client      => false,
      accept      => '1873',
      connect     => '873',
    }
+
+   stunnel::tun { 'ldap':
+     ca_file     => '/etc/puppet/ssl/certs/ca.pem',
+     crl_file    => '/etc/puppet/ssl/crl.pem',
+     client      => true,
+     accept      => 'localhost:1389',
+     connect     => 'ldap.server.local:636',
+   }
+
 ```
 
 ## Notes
-* There is no sysvinit script installed as part of the `stunnel` package on Red Hat systems.
+* This includes an sysvinit script because the `stunnel` package on Red Hat systems does not provide one.
 * Use of SSLv2 is highly discouraged because it's known to be vulnerable.
-* The chroot defined in `stunnel::tun` needs to be manually created.
+* AIX support does not include package installation
 
 ## Authors
 * Cody Herriages <cody@puppetlabs.com>
 * Sam Kottler <shk@linux.com>
+* Josh Preston
