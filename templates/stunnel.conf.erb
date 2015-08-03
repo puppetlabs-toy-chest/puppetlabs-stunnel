@@ -32,6 +32,10 @@ output = <%= log_dest %>
 
 client = <%= client_on %>
 
+<%- if @disable_fips -%>
+fips = no
+<%- end -%>
+
 [<%= name -%>]
 accept = <%= accept %>
 connect = <%= connect %>
