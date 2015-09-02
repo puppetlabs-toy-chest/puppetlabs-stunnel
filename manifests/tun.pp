@@ -65,12 +65,16 @@
 #   For which host and on which port to accept connection from.
 #
 # [*connect*]
-#  What port or host and port to connect to.
+#   What port or host and port to connect to.
 #
 # [*conf_dir*]
 #   The default base configuration directory for your version on stunnel.
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
+#
+# [*disable_fips*]
+#   Optionally disable entering FIPS mode if stunnel was compiled with
+#   FIPS 140-2 support.
 #
 # === Examples
 #
@@ -101,17 +105,19 @@ define stunnel::tun(
     $private_key,
     $ca_file,
     $crl_file,
-    $ssl_version = 'TLSv1',
+    $ssl_version  = 'TLSv1',
     $chroot,
     $user,
     $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
+    $pid_file     = "/${name}.pid",
+    $debug_level  = '0',
+    $log_dest     = "/var/log/${name}.log",
     $client,
     $accept,
     $connect,
-    $conf_dir    = $stunnel::params::conf_dir
+    $conf_dir     = $stunnel::params::conf_dir,
+    $verify       = 2,
+    $disable_fips = false,
 ) {
 
   $ssl_version_real = $ssl_version ? {
@@ -135,6 +141,22 @@ define stunnel::tun(
     owner   => '0',
     group   => '0',
     require => File[$conf_dir],
+  }
+
+  if ( $::osfamily == 'RedHat' ) {
+    file { "/etc/init.d/stunnel_${name}":
+      ensure  => file,
+      content => template("${module_name}/redhat_init.erb"),
+      mode    => '0755',
+      owner   => '0',
+      group   => '0',
+    }
+    service { "stunnel_${name}":
+      ensure     => 'running',
+      enable     => true,
+      hasrestart => true,
+      hasstatus  => true,
+    }
   }
 
   file { $chroot:
