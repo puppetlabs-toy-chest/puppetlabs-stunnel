@@ -26,16 +26,19 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 class stunnel::params {
-  case $osfamily {
-    Debian: {
+  case $::osfamily {
+    'Debian': {
       $conf_dir = '/etc/stunnel'
       $package  = 'stunnel4'
       $service  = 'stunnel4'
     }
-    RedHat: {
+    'RedHat': {
       $conf_dir = '/etc/stunnel'
       $package = 'stunnel'
       $service = 'stunnel'
+    }
+    default: {
+      fail("Your OS family $::osfamily is not supported")
     }
   }
 }
