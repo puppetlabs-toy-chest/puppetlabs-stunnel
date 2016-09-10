@@ -25,10 +25,10 @@ describe 'stunnel' do
   end
 
   context 'stunnel::tun' do
-    it { is_expected.to include_class('stunnel::params') }
+    it { is_expected.to contain_class('stunnel::params') }
   end
 
   context 'stunnel::init' do
-    it { is_expected.to include_class('stunnel::params') }
+    it { is_expected.to contain_class('stunnel::params') }
   end
 end
