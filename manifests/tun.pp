@@ -101,16 +101,16 @@ define stunnel::tun(
     $private_key,
     $ca_file,
     $crl_file,
-    $ssl_version = 'TLSv1',
     $chroot,
     $user,
     $group,
-    $pid_file    = "/${name}.pid",
-    $debug_level = '0',
-    $log_dest    = "/var/log/${name}.log",
     $client,
     $accept,
     $connect,
+    $ssl_version = 'TLSv1',
+    $pid_file    = "/${name}.pid",
+    $debug_level = '0',
+    $log_dest    = "/var/log/${name}.log",
     $conf_dir    = $stunnel::params::conf_dir
 ) {
 
