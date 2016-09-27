@@ -38,7 +38,7 @@ class stunnel::params {
       $service = 'stunnel'
     }
     default: {
-      fail("Your OS family $::osfamily is not supported")
+      fail("Your OS family ${::osfamily} is not supported")
     }
   }
 }

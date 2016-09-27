@@ -49,7 +49,7 @@ class stunnel(
     recurse => true,
   }
 
-  if $osfamily == "Debian" {
+  if $::osfamily == 'Debian' {
     exec { 'enable stunnel':
       command => 'sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/stunnel4',
       path    => [ '/bin', '/usr/bin' ],
