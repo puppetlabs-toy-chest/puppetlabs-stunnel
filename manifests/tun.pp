@@ -34,6 +34,14 @@
 #   Which SSL version you plan to enforce for this tunnel.  The preferred and
 #   default is TLSv1.
 #
+# [*verify*]
+#    Stunnel has methods for checking certificates, which are controlled by the verify option
+#      0 - request and ignore peer certificate
+#      1 - verify peer certificate if present
+#      2 - verify peer certificate
+#      3 - verify peer with locally installed certificate
+#      4 - ignore CA chain and only verify peer certificate
+#
 # [*chroot*]
 #   To protect your host the stunnel application runs inside a chrooted
 #   environment.  You must devine the location of the processes' root
@@ -108,6 +116,7 @@ define stunnel::tun(
     $accept,
     $connect,
     $ssl_version = 'TLSv1',
+    $verify      = '2',
     $pid_file    = "/${name}.pid",
     $debug_level = '0',
     $log_dest    = "/var/log/${name}.log",
