@@ -1,7 +1,11 @@
 ; This stunnel config is managed by Puppet.
 
+<% if @certificate != '' -%>
 cert = <%= @certificate %>
+<% end -%>
+<% if @private_key != '' -%>
 key = <%= @private_key %>
+<% end -%>
 CAfile = <%= @ca_file %>
 CRLfile = <%= @crl_file %>
 sslVersion = <%= @ssl_version_real %>
