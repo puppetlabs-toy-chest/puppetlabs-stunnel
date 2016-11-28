@@ -105,6 +105,7 @@ define stunnel::tun(
     $user        = undef,
     $group       = undef,
     $ca_file     = undef,
+    $ca_path     = undef,
     $crl_file    = undef,
     $chroot      = undef,
     $ssl_version = 'TLSv1',

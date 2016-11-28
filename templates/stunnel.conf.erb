@@ -5,6 +5,9 @@ key = <%= @private_key %>
 <%- if @ca_file != nil -%>
 CAfile = <%= @ca_file %>
 <%- end -%>
+<%- if @ca_path != nil -%>
+capath = <%= @ca_path %>
+<%- end -%>
 <%- if @crl_file != nil -%>
 CRLfile = <%= @crl_file %>
 <%- end -%>
