@@ -20,6 +20,9 @@
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
 #
+# [*tunnels*]
+#   A hash of tunnels that should be created, commonly provided via hiera
+#
 # === Examples
 #
 # include stunnel
@@ -35,7 +38,8 @@
 class stunnel(
   $package  = $stunnel::params::package,
   $service  = $stunnel::params::service,
-  $conf_dir = $stunnel::params::conf_dir
+  $conf_dir = $stunnel::params::conf_dir,
+  $tunnels  = {},
 ) inherits stunnel::params {
 
   package { $package:
@@ -66,5 +70,9 @@ class stunnel(
       hasrestart => true,
       hasstatus  => false,
     }
+  }
+
+  if !empty($tunnels){
+    create_resources('stunnel::tun', $tunnels)
   }
 }
