@@ -99,14 +99,15 @@
 define stunnel::tun(
     $certificate,
     $private_key,
-    $ca_file,
-    $crl_file,
-    $chroot,
-    $user,
-    $group,
     $client,
     $accept,
     $connect,
+    $user        = undef,
+    $group       = undef,
+    $ca_file     = undef,
+    $ca_path     = undef,
+    $crl_file    = undef,
+    $chroot      = undef,
     $ssl_version = 'TLSv1',
     $pid_file    = "/${name}.pid",
     $debug_level = '0',
@@ -137,10 +138,12 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  if $chroot {
+    file { $chroot:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
   }
 }

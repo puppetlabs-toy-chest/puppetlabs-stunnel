@@ -2,14 +2,26 @@
 
 cert = <%= @certificate %>
 key = <%= @private_key %>
+<%- if @ca_file != nil -%>
 CAfile = <%= @ca_file %>
+<%- end -%>
+<%- if @ca_path != nil -%>
+capath = <%= @ca_path %>
+<%- end -%>
+<%- if @crl_file != nil -%>
 CRLfile = <%= @crl_file %>
+<%- end -%>
 sslVersion = <%= @ssl_version_real %>
 verify = 2
-
+<%- if @chroot != nil -%>
 chroot = <%= @chroot %>
+<%- end -%>
+<%- if @user != nil -%>
 setuid = <%= @user %>
+<%- end -%>
+<%- if @group != nil -%>
 setgid = <%= @group %>
+<%- end -%>
 pid = <%= @pid_file %>
 
 socket = l:TCP_NODELAY=1
