@@ -20,6 +20,19 @@ output = <%= @log_dest %>
 
 client = <%= @client_on %>
 
+<%- if @timeout_busy != nil -%>
+TIMEOUTbusy = <%= @timeout_busy %>
+<%- end -%>
+<%- if @timeout_close != nil -%>
+TIMEOUTclose = <%= @timeout_close %>
+<%- end -%>
+<%- if @timeout_connect != nil -%>
+TIMEOUTconnect = <%= @timeout_connect %>
+<%- end -%>
+<%- if @timeout_idle != nil -%>
+TIMEOUTidle = <%= @timeout_idle %>
+<%- end -%>
+
 [<%= @name -%>]
 accept = <%= @accept %>
 connect = <%= @connect %>
