@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-stunnel",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "puppetlabs",
   "summary": "A module for creating secure tunnels",
   "license": "Apache-2.0",
