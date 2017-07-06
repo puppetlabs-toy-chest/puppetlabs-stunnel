@@ -33,10 +33,13 @@
 # [*verify*]
 #   Verify peer certificate. Default is 2 for backwards compatibility with
 #     this Puppet module.
-#   Other values: 1 - verify peer certificate if present
+#   Other values: 0 - request and ignore peer certificate.
+#                 1 - verify peer certificate if present
 #                 2 - verify peer certificate
 #                 3 - verify peer with locally installed certificate
+#                 4 - ignore CA chain and only verify peer certificate
 #                 default - no verify
+#   Note that this module has only been tested using verify mode 2 and default.
 #   See below for examples.
 #
 # [*ssl_version*]

@@ -17,7 +17,7 @@ describe 'stunnel::tun' do
     end
     it {
       is_expected.to contain_file('/etc/stunnel/rsyncd.conf')
-        .with_content(/verify = default/)
+        .without_content(/verify/)
     }
   end
 
