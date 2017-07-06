@@ -1,8 +1,6 @@
 ; This stunnel config is managed by Puppet.
 
-<% if @verify == 'default' -%>
-verify = default
-<% else -%>
+<% unless @verify == 'default' -%>
 cert = <%= @certificate %>
 key = <%= @private_key %>
 CAfile = <%= @ca_file %>
