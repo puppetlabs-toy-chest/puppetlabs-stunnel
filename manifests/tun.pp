@@ -40,8 +40,8 @@
 #   See below for examples.
 #
 # [*ssl_version*]
-#   Which SSL version you plan to enforce for this tunnel.  The preferred and
-#   default is TLSv1.
+#   Which SSL version you plan to enforce for this tunnel.
+#   The default is TLSv1.
 #
 # [*chroot*]
 #   To protect your host the stunnel application runs inside a chrooted
@@ -80,6 +80,13 @@
 #   The default base configuration directory for your version on stunnel.
 #   By default we look this value up in a stunnel::data class, which has a
 #   list of common answers.
+#
+# [*chroot_mode*]
+#   The mode used for a chroot dir when specified.
+#   In some versions, the log file is placed under chroot, and 
+#   permissions may be needed to read the file.
+#   Note: Should not be writable except by owner.
+#   Default: '0600'
 #
 # === Examples
 #
@@ -121,33 +128,36 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 define stunnel::tun(
+    $chroot,
+    $user,
+    $group,
+    $accept,
+    $connect,
     $certificate = undef,
     $private_key = undef,
     $ca_file     = undef,
     $crl_file    = undef,
     $ssl_version = 'TLSv1',
     $verify      = '2',
-    $chroot,
-    $user,
-    $group,
     $client      = false,
-    $accept,
-    $connect,
     $pid_file    = "/${name}.pid",
     $debug_level = '0',
     $log_dest    = "/var/log/${name}.log",
-    $conf_dir    = $stunnel::params::conf_dir
+    $conf_dir    = $stunnel::params::conf_dir,
+    $chroot_mode = '0600'
 ) {
 
   unless $verify == 'default' {
     $ssl_version_real = $ssl_version ? {
       'tlsv1' => 'TLSv1',
+      'tlsv1.1' => 'TLSv1.1',
+      'tlsv1.2' => 'TLSv1.2',
       'sslv2' => 'SSLv2',
       'sslv3' => 'SSLv3',
       default => $ssl_version,
     }
 
-    validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$', 'The option ssl_version must have a value that is either SSLv2, SSLv3, of TLSv1. The default and prefered option is TLSv1. SSLv2 should be avoided.')
+    validate_re($ssl_version_real, '^SSLv2$|^SSLv3$|^TLSv1$|^TLSv1.1$|^TLSv1.2$', 'The option ssl_version must have a value that is SSLv2, SSLv3, TLSv1, TLSv1.1, or TLSv1.2. The default is TLSv1. SSLv2 should be avoided.')
   }
 
   $client_on = $client ? {
@@ -168,6 +178,6 @@ define stunnel::tun(
     ensure => directory,
     owner  => $user,
     group  => $group,
-    mode   => '0600',
+    mode   => $chroot_mode,
   }
 }
