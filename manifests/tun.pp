@@ -139,7 +139,7 @@ define stunnel::tun(
     $conf_dir    = $stunnel::params::conf_dir
 ) {
 
-  unless $verify == 'default' {
+  unless $verify == 'default' or empty($verify) {
     $ssl_version_real = $ssl_version ? {
       'tlsv1' => 'TLSv1',
       'sslv2' => 'SSLv2',
