@@ -127,7 +127,7 @@ define stunnel::tun(
     $crl_file    = undef,
     $ssl_version = 'TLSv1',
     $verify      = '2',
-    $chroot,
+    $chroot      = undef,
     $user,
     $group,
     $client      = false,
@@ -164,10 +164,12 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  unless empty($chroot) {
+    file { $chroot:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
   }
 }
