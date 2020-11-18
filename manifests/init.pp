@@ -33,9 +33,10 @@
 # Copyright 2012 Puppet Labs, LLC
 #
 class stunnel(
-  $package  = $stunnel::params::package,
-  $service  = $stunnel::params::service,
-  $conf_dir = $stunnel::params::conf_dir
+  $package        = $stunnel::params::package,
+  $service        = $stunnel::params::service,
+  $conf_dir       = $stunnel::params::conf_dir,
+  $service_ensure = $stunnel::params::service_ensure,
 ) inherits stunnel::params {
 
   package { $package:
@@ -49,7 +50,7 @@ class stunnel(
     recurse => true,
   }
 
-  if $::osfamily == 'Debian' {
+  if $::osfamily == 'Debian' and $service_ensure {
     exec { 'enable stunnel':
       command => 'sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/stunnel4',
       path    => [ '/bin', '/usr/bin' ],
@@ -61,7 +62,7 @@ class stunnel(
     # There isn't a sysvinit script installed by the "stunnel" package on
     # Red Hat systems.
     service { $service:
-      ensure     => running,
+      ensure     => $service_ensure,
       enable     => true,
       hasrestart => true,
       hasstatus  => false,
