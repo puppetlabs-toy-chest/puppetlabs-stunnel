@@ -3,28 +3,25 @@
 <% if @verify == 'default' -%>
 verify = default
 <% else -%>
-cert = <%= @certificate %>
-key = <%= @private_key %>
-CAfile = <%= @ca_file %>
-CRLfile = <%= @crl_file %>
-sslVersion = <%= @ssl_version_real %>
+<%= "cert = #{@certificate}" if defined?(@cert) %>
+<%= "key = #{@private_key}" if defined?(@private_key) %>
+<%= "CAfile = #{@ca_file}" if defined?(@ca_file) %>
+<%= "CRLfile = #{@crl_file}" if defined?(@crl_file) %>
+<%= "sslVersion = #{@ssl_version_real}" if defined?(@ssl_version_real) %>
 
-verify = <%= @verify %>
+<%= "verify = #{@verify}" if defined?(@verify) %>
 <% end -%>
 
-chroot = <%= @chroot %>
-setuid = <%= @user %>
-setgid = <%= @group %>
-pid = <%= @pid_file %>
+<%= "chroot = #{@chroot}" if defined?(@chroot) %>
+<%= "setuid = #{@user}" if defined?(@user) %>
+<%= "setgid = #{@group}" if defined?(@group) %>
+<%= "pid = #{@pid_file}" if defined?(@pid_file) %>
 
-socket = l:TCP_NODELAY=1
-socket = r:TCP_NODELAY=1
+<%= "debug = #{@debug_level}" if defined?(@debug_level) %>
+<%= "output = #{@log_dest}" if defined?(@log_dest) %>
 
-debug = <%= @debug_level %>
-output = <%= @log_dest %>
-
-client = <%= @client_on %>
 
 [<%= @name -%>]
-accept = <%= @accept %>
-connect = <%= @connect %>
+<%= "client = #{@client_on}" if defined?(@client_on) %>
+<%= "accept = #{@accept}" if defined?(@accept) %>
+<%= "connect = #{@connect}" if defined?(@connect) %>

@@ -125,9 +125,9 @@ define stunnel::tun(
     $private_key = undef,
     $ca_file     = undef,
     $crl_file    = undef,
-    $ssl_version = 'TLSv1',
-    $verify      = '2',
-    $chroot,
+    $ssl_version = undef,
+    $verify      = undef,
+    $chroot      = undef,
     $user,
     $group,
     $client      = false,
@@ -139,7 +139,7 @@ define stunnel::tun(
     $conf_dir    = $stunnel::params::conf_dir
 ) {
 
-  unless $verify == 'default' {
+  unless $verify == 'default' or empty($verify) {
     $ssl_version_real = $ssl_version ? {
       'tlsv1' => 'TLSv1',
       'sslv2' => 'SSLv2',
@@ -164,10 +164,12 @@ define stunnel::tun(
     require => File[$conf_dir],
   }
 
-  file { $chroot:
-    ensure => directory,
-    owner  => $user,
-    group  => $group,
-    mode   => '0600',
+  unless empty($chroot) {
+    file { $chroot:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+    }
   }
 }

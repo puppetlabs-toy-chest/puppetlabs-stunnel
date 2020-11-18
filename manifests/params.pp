@@ -28,14 +28,16 @@
 class stunnel::params {
   case $::osfamily {
     'Debian': {
-      $conf_dir = '/etc/stunnel'
-      $package  = 'stunnel4'
-      $service  = 'stunnel4'
+      $conf_dir       = '/etc/stunnel'
+      $package        = 'stunnel4'
+      $service        = 'stunnel4'
+      $service_ensure = 'running'
     }
     'RedHat': {
-      $conf_dir = '/etc/stunnel'
-      $package = 'stunnel'
-      $service = 'stunnel'
+      $conf_dir       = '/etc/stunnel'
+      $package        = 'stunnel'
+      $service        = 'stunnel'
+      $service_ensure = 'running'
     }
     default: {
       fail("Your OS family ${::osfamily} is not supported")
